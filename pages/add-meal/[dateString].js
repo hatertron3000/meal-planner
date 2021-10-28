@@ -5,15 +5,14 @@ import RecipeSearch from '../../components/recipeSearch'
 import months from '../../lib/months'
 
 export default function AddMeal() {
-    const router = useRouter()
-    const { dateString } = router.query
-    console.log(router.query)
-
-    // const year = dateArray[0]
+    const { isReady, query } = useRouter()
+    const { dateString } = query
 
 
-    return <div>
-        { <h1>{`Add Meal for ${months[dateString.split('-')[1] - 1]} ${dateString.split('-')[2]}, ${dateString.split('-')[0]}`}</h1> }
-        <RecipeSearch onChooseRecipe={() => window.alert('TODO: Implement')}/>
-    </div>
-}
+    return isReady
+        ? <div>
+            { <h1>{`Add Meal for ${months[dateString.split('-')[1] - 1]} ${dateString.split('-')[2]}, ${dateString.split('-')[0]}`}</h1> }
+            <RecipeSearch onChooseRecipe={() => window.alert('TODO: Implement')}/>
+        </div>
+        : <div>Loading...</div>
+    }
