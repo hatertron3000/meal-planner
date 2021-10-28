@@ -54,8 +54,6 @@ export default function Calendar({ meals = [], month, year, handleNextMonthClick
         rows.push(dates.splice(0, 7))
     }
 
-    console.log(months[month], month)
-
     return (
         <div className={styles.calendarContainer}>
             <div style={{display: 'flex', justifyContent: 'space-between'}}>

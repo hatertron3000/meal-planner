@@ -32,7 +32,6 @@ export default function Home({ isConnected, data }) {
         year: calendarState.year
       })
     else {
-      console.log('month was 0')
       setCalendarState({
         month: 11,
         year: calendarState.year - 1
