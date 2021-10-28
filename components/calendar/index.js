@@ -10,11 +10,11 @@ const Row = ({ dates, month, year }) => {
     </tr>
 }
 
-export default function Calendar({ meals = [], month, year }) {
+export default function Calendar({ meals = [], month, year, handleNextMonthClick, handlePrevMonthClick }) {
 
     const now = new Date()
 
-    if (!month) {
+    if (!month && month !== 0) {
         // Set both month and year
         year = now.getFullYear()
         month = now.getMonth()
@@ -58,7 +58,11 @@ export default function Calendar({ meals = [], month, year }) {
 
     return (
         <div className={styles.calendarContainer}>
-            <h3>{`${months[month]}, ${year}`}</h3>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <button onClick={handlePrevMonthClick}>&lt;&lt;</button>
+                <h3>{`${months[month]}, ${year}`}</h3>
+                <button onClick={handleNextMonthClick}>&gt;&gt;</button>
+                </div>
             <table>
                 <thead>
                     <tr>

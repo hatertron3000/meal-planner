@@ -1,9 +1,44 @@
 import Head from 'next/head'
 import Calendar from '../components/calendar'
 import clientPromise from '../lib/mongodb'
+import { useState } from 'react'
+
+const now = new Date()
 
 export default function Home({ isConnected, data }) {
-  const now = new Date() 
+  const [calendarState, setCalendarState] = useState({
+    month: now.getMonth(),
+    year: now.getFullYear(),
+  })
+
+  const handleNextMonthClick = () => {
+    if(calendarState.month != 11)
+      setCalendarState({
+        month: calendarState.month + 1,
+        year: calendarState.year
+      })
+    else {
+      setCalendarState({
+        month: 0,
+        year: calendarState.year + 1
+      })
+    }
+  }
+
+  const handlePrevMonthClick = () => {
+    if(calendarState.month != 0)
+      setCalendarState({
+        month: calendarState.month - 1,
+        year: calendarState.year
+      })
+    else {
+      console.log('month was 0')
+      setCalendarState({
+        month: 11,
+        year: calendarState.year - 1
+      })
+    }
+  }
 
   return (
     <div className="container">
@@ -30,7 +65,7 @@ export default function Home({ isConnected, data }) {
           </h2>
         )}
 
-      <Calendar month={now.getMonth()} year={now.getFullYear()} />
+      <Calendar month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
       </main>
 
       <footer>
