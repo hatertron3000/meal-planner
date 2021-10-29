@@ -2,16 +2,21 @@ import styles from './Calendar.module.css'
 import Cell from './Cell'
 import months from '../../lib/months'
 
-const Row = ({ dates, month, year }) => {
+const Row = ({ dates, month, year, meals }) => {
     return <tr>
-        {dates.map((date, i) => (
-           <Cell month={month} year={year} date={date} key={i} />
-        ))}
+        {dates.map((date, i) => {
+           const mealsForThisDate = meals.filter(meal => {
+               const d = new Date(meal.date)
+               return d.getUTCDate() === date
+               && d.getUTCMonth() === month
+               && d.getUTCFullYear() === year
+           })
+           return <Cell month={month} year={year} date={date} key={i} meals={mealsForThisDate}/>
+        })}
     </tr>
 }
 
-export default function Calendar({ meals = [], month, year, handleNextMonthClick, handlePrevMonthClick }) {
-
+export default function Calendar({ meals = [], month, year, handleNextMonthClick, handlePrevMonthClick, setMeals }) {
     const now = new Date()
 
     if (!month && month !== 0) {
@@ -46,7 +51,6 @@ export default function Calendar({ meals = [], month, year, handleNextMonthClick
             dates.push(undefined)
         }
     }
-    const trailingEmptyCellsCount = d.getDay % 6
 
     const rows = []
 
@@ -74,7 +78,7 @@ export default function Calendar({ meals = [], month, year, handleNextMonthClick
                     </tr>
                 </thead>
                 <tbody>
-                   { rows.map((row, i) => <Row dates={row} month={month} year={year} key={i} />)}
+                   { rows.map((row, i) => <Row dates={row} meals={meals} month={month} year={year} key={i} />)}
                 </tbody>
             </table>
         </div>

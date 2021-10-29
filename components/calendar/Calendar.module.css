@@ -1,18 +1,19 @@
 .calendarContainer {
-    width: 100%;
-    padding-left: 3em;
-    padding-right: 3em;
+  width: 100%;
+  padding-left: 3em;
+  padding-right: 3em;
 }
 
 .calendarContainer > table {
-    width: 100%
+  width: 100%;
+  table-layout: fixed;
 }
 
 .calendarContainer > table > tbody > tr > td {
-    min-width: 100px;
-    height: 100px;
-    border-width: 1px;
-    border-color: #112211;
-    border-style: solid;
-    padding: 4px;
+  min-width: 100px;
+  height: 100px;
+  border-width: 1px;
+  border-color: #112211;
+  border-style: solid;
+  padding: 0.1em;
 }

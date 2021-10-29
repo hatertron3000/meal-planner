@@ -3,21 +3,9 @@ import styles from './RecipeSearch.module.css'
 import { diets, healths, cuisineTypes, mealTypes, dishTypes } from "../../lib/edamam"
 import Image from 'next/image'
 import Link from 'next/link'
+import RecipeCard from "./RecipeCard"
 
-const RecipeCard = ({ recipe }) => {
-    const { image, url, source, label } = recipe
-    return <div className={styles.recipeCard}>
-        <Link href={url}>
-            <Image src={image} height={300} width={300} alt={`Picture of ${label}`} />
-        </Link>
-        <p><a href={url} target="_blank">
-            {label}
-        </a></p>
-        <address>Source: {source}</address>
-    </div>
-}
-
-export default function RecipeSearch( {onChooseRecipe} ) {
+export default function RecipeSearch( {addToPlan, meals} ) {
     const [diet, setDiet] = useState('any'),
     [health, setHealth] = useState('any'),
     [cuisineType, setCuisineType] = useState('any'),
@@ -92,6 +80,8 @@ export default function RecipeSearch( {onChooseRecipe} ) {
                             name="cuisineType"
                             id={`${cuisineTypeOption}-cuisineType`}
                             value={cuisineTypeOption}
+                            readOnly
+                            readOnly
                             checked={cuisineTypeOption === cuisineType}
                             onClick={() => setCuisineType(cuisineTypeOption)}
                         />
@@ -107,6 +97,7 @@ export default function RecipeSearch( {onChooseRecipe} ) {
                             name="mealType"
                             id={`${mealTypeOption}-mealType`}
                             value={mealTypeOption}
+                            readOnly
                             checked={mealTypeOption === mealType}
                             onClick={() => setMealType(mealTypeOption)}
                         />
@@ -122,6 +113,7 @@ export default function RecipeSearch( {onChooseRecipe} ) {
                             name="dishType"
                             id={`${dishTypeOption}-dishType`}
                             value={dishTypeOption}
+                            readOnly
                             checked={dishTypeOption === dishType}
                             onClick={() => setDishType(dishTypeOption)}
                         />
@@ -137,6 +129,7 @@ export default function RecipeSearch( {onChooseRecipe} ) {
                             name="diet"
                             id={`${dietOption}-diet`}
                             value={dietOption}
+                            readOnly
                             checked={dietOption === diet}
                             onClick={() => setDiet(dietOption)}
                         />
@@ -151,6 +144,7 @@ export default function RecipeSearch( {onChooseRecipe} ) {
                             name="health"
                             id={`${healthOption}-health`}
                             value={healthOption}
+                            readOnly
                             checked={healthOption === health}
                             onClick={() => setHealth(healthOption)}
                         />
@@ -165,7 +159,7 @@ export default function RecipeSearch( {onChooseRecipe} ) {
                 ? <button onClick={() => onGetNextPage(searchResults.links.next)}>Load more results</button>
                 : null }
             <div className={styles.cardsContainer}>
-                { searchResults.recipes.map(recipe =>  <RecipeCard recipe={recipe} />)}
+                { searchResults.recipes.map(recipe =>  <RecipeCard recipe={recipe} addToPlan={addToPlan}/>)}
             </div>
         </div>
     </div>

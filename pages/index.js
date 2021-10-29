@@ -1,15 +1,14 @@
 import Head from 'next/head'
 import Calendar from '../components/calendar'
-import clientPromise from '../lib/mongodb'
+import clientPromise, { collections } from '../lib/mongodb'
 import { useState } from 'react'
 
-const now = new Date()
-
-export default function Home({ isConnected, data }) {
+export default function Home({ isConnected, initialMeals, month, year, date }) {
   const [calendarState, setCalendarState] = useState({
-    month: now.getMonth(),
-    year: now.getFullYear(),
+    month: month,
+    year: year,
   })
+  const [meals, setMeals] = useState(JSON.parse(initialMeals))
 
   const handleNextMonthClick = () => {
     if(calendarState.month != 11)
@@ -54,8 +53,6 @@ export default function Home({ isConnected, data }) {
         {isConnected ? (
           <div>
             <h2 className="subtitle">You are connected to MongoDB</h2>
-            <p>Data:</p>
-            { <div>{ data }</div> }
           </div>
         ) : (
           <h2 className="subtitle">
@@ -64,7 +61,7 @@ export default function Home({ isConnected, data }) {
           </h2>
         )}
 
-      <Calendar month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
+      <Calendar meals={meals} setMeals={setMeals} month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
       </main>
 
       <footer>
@@ -233,15 +230,25 @@ export default function Home({ isConnected, data }) {
 }
 
 export async function getServerSideProps(context) {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth()
+
   const client = await clientPromise
   const isConnected = await client.isConnected()
   const db = await client.db()
-  const collection = await db.collection('meal-plans')
-  const cursor = await collection.find({})
+  const collection = await db.collection(collections.mealPlans)
+  const cursor = await collection.find({
+    date: {
+      $gte: new Date(year, month),
+      $lt: new Date(year, month + 1)
+    }
+  })
   const docs = await cursor.toArray()
-  const data = JSON.stringify(docs)
+  console.log(docs)
+  const initialMeals = JSON.stringify(docs)
   
   return {
-    props: { isConnected, data },
+    props: { isConnected, initialMeals, month, year },
   }
 }
