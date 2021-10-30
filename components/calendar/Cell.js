@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function Cell({date, month, year, meals}) {
     const now = new Date()
-    const isToday = now.getDate() === date
+    const isToday = now.getDate() === date && now.getMonth() === month && now.getFullYear() === year
         && now.getMonth() === month
         && now.getFullYear() === year
 

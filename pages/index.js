@@ -1,13 +1,23 @@
 import Head from 'next/head'
 import Calendar from '../components/calendar'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 export default function Home() {
-  const d = new Date()
+  const { query } = useRouter()
+  let d
+  const { date } = query
+  console.log(date)
+  d = new Date(date)
+  if (isNaN(d.getFullYear()))
+    d = new Date()
+  console.log(d)
   const [calendarState, setCalendarState] = useState({
     month: d.getMonth(),
     year: d.getFullYear(),
   })
+
+  console.log('calendarState', calendarState)
 
   const handleNextMonthClick = () => {
     if(calendarState.month != 11)
