@@ -57,6 +57,12 @@
   vertical-align: top;
 }
 
+.td:before {
+  content: "";
+  display: block;
+  min-width: 200px;
+}
+
 .tabLabel {
   font-size: small;
   color: #040404;
