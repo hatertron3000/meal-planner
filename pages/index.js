@@ -54,25 +54,34 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+
+
+      <header>
+        
         <h1 className="title">
           Meal Planner
         </h1>
-
-
-      <div style={{display: 'flex'}}>
-        <div>
-        <button onClick={handlePrevMonthClick}>&lt;&lt;</button>
+        
+        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <div></div>
+          <div style={{display: 'flex'}}>
+            <div>
+              <button onClick={handlePrevMonthClick}>&lt;&lt;</button>
+            </div>
+            <div>
+              <button onClick={handleNextMonthClick}>&gt;&gt;</button>
+            </div>
+          </div>
+          <div></div>
         </div>
-        <div>
-          <button onClick={handleNextMonthClick}>&gt;&gt;</button>
+      </header>
+      
+      <main>
+        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <div></div>
+          <Calendar  month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
+          <div></div>
         </div>
-      </div>
-      <div style={{display: 'flex', justifyContent: 'space-between'}}>
-        <div></div>
-        <Calendar  month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
-        <div></div>
-      </div>
 
       </main>
 
