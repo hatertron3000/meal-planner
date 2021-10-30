@@ -15,33 +15,40 @@ export default function AddMeal({ isConnected, initialMeals }) {
     const mealsApiPath = '/api/meals'
 
     const onAddToPlan = async (recipe) => {
-        const meal = {
-            date: dateString,
-            recipe
-        }
-        console.log(meal)
-        const options = {
-            method: 'POST',
-            mode: 'same-origin',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(meal)
-        }
-
-        try {
-            const res = await fetch(mealsApiPath, options)
-            const data = await res.json()
-            if(!data.meal)
-                throw new Error('Meal not created')
-            else {
-                setMeals(meals.concat(data.meal))
-                console.log(data.meal)
+        const date = new Date(dateString)
+        if (date.getFullYear() > 1970) {
+            const meal = {
+                date: new Date(dateString),
+                recipe
             }
-        } catch(err) {
-            console.error(err)
-            setErrors(errors.concat(err))
+    
+            const options = {
+                method: 'POST',
+                mode: 'same-origin',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(meal)
+            }
+
+                
+            try {
+                const res = await fetch(mealsApiPath, options)
+                const data = await res.json()
+                if(!data.meal)
+                    throw new Error('Meal not created')
+                else {
+                    setMeals(meals.concat(data.meal))
+                }
+            } catch(err) {
+                console.error(err)
+                setErrors(errors.concat(err))
+            }
+        } else {
+            setErrors(errors.concat('Invalid date'))
         }
+        
+
     }
 
     const onDeleteMeal = async (id) => {
@@ -51,7 +58,6 @@ export default function AddMeal({ isConnected, initialMeals }) {
 
         const res = await fetch( `${mealsApiPath}?id=${id}`, options)
         if (res.status == 204) {
-            console.log('deleted successfully')
             setMeals(meals.filter(meal => meal._id != id))
         } else {
             setErrors(errors.concat(`Unable to remove ${id} from meal plan`))

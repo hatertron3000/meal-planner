@@ -39,8 +39,6 @@ export default async function MealsApi(req, res) {
             res.status(400).json({ error: 'min_date is invalid'})
         } else {
             try {
-                console.log(min_date, max_date)
-                console.log(new Date(min_date))
                 const findCursor = await collection.find({
                     date: {
                         $gte: new Date(min_date),
@@ -99,13 +97,13 @@ export default async function MealsApi(req, res) {
         else {
             try {
             /* TODO: Create Meal and Recipe schemas */
-            
             const recipe = encodeRecipe(req.body.recipe)
             const meal = {
                 date: new Date(req.body.date),
                 createdAt: new Date(),
                 recipe
             }
+
             /* TODO: Validate input more thoroughly */
             const commandResult = await collection.insertOne(meal)
             if (commandResult.result.ok)

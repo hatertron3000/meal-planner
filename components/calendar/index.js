@@ -14,14 +14,12 @@ const Row = ({ dates, month, year, meals = [] }) => {
                && d.getUTCMonth() === month
                && d.getUTCFullYear() === year
            })
-        //    console.log('mealsForThisDate', mealsForThisDate)
            return <Cell month={month} year={year} date={date} key={i} meals={mealsForThisDate}/>
         })}
     </tr>
 }
 
-const fetcher = (url) => fetch(url).then(res => res.json()).then(json => {console.log(json)
-    return json})
+const fetcher = (url) => fetch(url).then(res => res.json())
 
 const CalendarComponent = ({ month, year, rows, meals }) => (
     <div className={styles.calendarContainer}>

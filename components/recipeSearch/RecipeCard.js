@@ -5,9 +5,9 @@ import Image from 'next/image'
 export default function RecipeCard ({ recipe, onPlan, addToPlan }) {
     const { image, url, source, label } = recipe
     return <div className={styles.recipeCard}>
-        <Link href={url}>
+        <a href={url}>
             <Image src={image} height={300} width={300} alt={`Picture of ${label}`} />
-        </Link>
+        </a>
         <p><a href={url} target="_blank">
             {label}
         </a></p>
