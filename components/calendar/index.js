@@ -1,8 +1,11 @@
 import styles from './Calendar.module.css'
 import Cell from './Cell'
 import months from '../../lib/months'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import useSWR from 'swr'
 
-const Row = ({ dates, month, year, meals }) => {
+const Row = ({ dates, month, year, meals = [] }) => {
     return <tr>
         {dates.map((date, i) => {
            const mealsForThisDate = meals.filter(meal => {
@@ -11,12 +14,48 @@ const Row = ({ dates, month, year, meals }) => {
                && d.getUTCMonth() === month
                && d.getUTCFullYear() === year
            })
+        //    console.log('mealsForThisDate', mealsForThisDate)
            return <Cell month={month} year={year} date={date} key={i} meals={mealsForThisDate}/>
         })}
     </tr>
 }
 
-export default function Calendar({ meals = [], month, year, handleNextMonthClick, handlePrevMonthClick, setMeals }) {
+const fetcher = (url) => fetch(url).then(res => res.json()).then(json => {console.log(json)
+    return json})
+
+const CalendarComponent = ({ month, year, rows, meals }) => (
+    <div className={styles.calendarContainer}>
+        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <div></div>
+            <h3>{`${months[month]}, ${year}`}</h3>
+            <div></div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+               { rows.map((row, i) => <Row dates={row} meals={meals} month={month} year={year} key={i} />)}
+            </tbody>
+        </table>
+    </div>
+)
+
+export default function Calendar({ month, year }) {
+    const url = `/api/meals?min_date=${encodeURIComponent(new Date(year, month, 1, 0))}&max_date=${encodeURIComponent(new Date(year, month + 1, 1, 0))}`
+    const {data, error} = useSWR(url, fetcher)
+    console.log(data, error)
+
+    if(error) console.error(error)
+    
     const now = new Date()
 
     if (!month && month !== 0) {
@@ -58,29 +97,10 @@ export default function Calendar({ meals = [], month, year, handleNextMonthClick
         rows.push(dates.splice(0, 7))
     }
 
-    return (
-        <div className={styles.calendarContainer}>
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <button onClick={handlePrevMonthClick}>&lt;&lt;</button>
-                <h3>{`${months[month]}, ${year}`}</h3>
-                <button onClick={handleNextMonthClick}>&gt;&gt;</button>
-                </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Sun</th>
-                        <th>Mon</th>
-                        <th>Tue</th>
-                        <th>Wed</th>
-                        <th>Thu</th>
-                        <th>Fri</th>
-                        <th>Sat</th>
-                    </tr>
-                </thead>
-                <tbody>
-                   { rows.map((row, i) => <Row dates={row} meals={meals} month={month} year={year} key={i} />)}
-                </tbody>
-            </table>
-        </div>
-    )
+    if(error) 
+        return <div>Error loading, try again.</div>
+    if(!data)
+        return <CalendarComponent rows={rows} month={month} year={year} meals={[]} />
+
+    return <CalendarComponent rows={rows} month={month} year={year} meals={data} />
 }

@@ -27,6 +27,37 @@ export default async function MealsApi(req, res) {
     const db = await client.db()
     const collection = db.collection(collections.mealPlans)
 
+    if (req.method === "GET") {
+        const { min_date, max_date } = req.query
+        if (!min_date) {
+            res.status(400).json({ error: 'min_date is a required query parameter'})
+        } else if (!max_date) {
+            res.status(400).json({ error: 'min_date is a required query parameter'})
+        } else  if(Date.parse(min_date) == NaN){
+                    res.status(400).json({ error: 'min_date is invalid'})
+        } else if (Date.parse(max_date) == NaN) {
+            res.status(400).json({ error: 'min_date is invalid'})
+        } else {
+            try {
+                console.log(min_date, max_date)
+                console.log(new Date(min_date))
+                const findCursor = await collection.find({
+                    date: {
+                        $gte: new Date(min_date),
+                        $lt: new Date(max_date)
+                    }
+                })
+
+                const meals = await findCursor.toArray()
+
+                res.status(200).json(meals)
+            } catch(err) {
+                console.error(err)
+                res.status(500).json({ error: "application error"})
+            }
+        }
+    }
+    
     if (req.method === "DELETE") {
         const { id } = req.query
         if(!id)

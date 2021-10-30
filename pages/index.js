@@ -1,14 +1,13 @@
 import Head from 'next/head'
 import Calendar from '../components/calendar'
-import clientPromise, { collections } from '../lib/mongodb'
 import { useState } from 'react'
 
-export default function Home({ isConnected, initialMeals, month, year, date }) {
+export default function Home() {
+  const d = new Date()
   const [calendarState, setCalendarState] = useState({
-    month: month,
-    year: year,
+    month: d.getMonth(),
+    year: d.getFullYear(),
   })
-  const [meals, setMeals] = useState(JSON.parse(initialMeals))
 
   const handleNextMonthClick = () => {
     if(calendarState.month != 11)
@@ -50,18 +49,18 @@ export default function Home({ isConnected, initialMeals, month, year, date }) {
           Meal Planner
         </h1>
 
-        {isConnected ? (
-          <div>
-            <h2 className="subtitle">You are connected to MongoDB</h2>
-          </div>
-        ) : (
-          <h2 className="subtitle">
-            You are NOT connected to MongoDB. Check the <code>README.md</code>{' '}
-            for instructions.
-          </h2>
-        )}
 
-      <Calendar meals={meals} setMeals={setMeals} month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
+      <div style={{display: 'flex'}}>
+        <div>
+        <button onClick={handlePrevMonthClick}>&lt;&lt;</button>
+        </div>
+        <div>
+          <button onClick={handleNextMonthClick}>&gt;&gt;</button>
+        </div>
+      </div>
+      <Calendar  month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
+
+
       </main>
 
       <footer>
@@ -76,14 +75,7 @@ export default function Home({ isConnected, initialMeals, month, year, date }) {
       </footer>
 
       <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
+
 
         main {
           width: 100%;
@@ -227,28 +219,4 @@ export default function Home({ isConnected, initialMeals, month, year, date }) {
       `}</style>
     </div>
   )
-}
-
-export async function getServerSideProps(context) {
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = now.getMonth()
-
-  const client = await clientPromise
-  const isConnected = await client.isConnected()
-  const db = await client.db()
-  const collection = await db.collection(collections.mealPlans)
-  const cursor = await collection.find({
-    date: {
-      $gte: new Date(year, month),
-      $lt: new Date(year, month + 1)
-    }
-  })
-  const docs = await cursor.toArray()
-  console.log(docs)
-  const initialMeals = JSON.stringify(docs)
-  
-  return {
-    props: { isConnected, initialMeals, month, year },
-  }
 }
