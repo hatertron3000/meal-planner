@@ -67,7 +67,7 @@ export default function AddMeal({ isConnected, initialMeals }) {
     return isReady
         ? isConnected 
             ? <div>
-                <Link href="/"><button>&lt;&lt; Back to Meal Planner</button></Link>
+                <Link href={{pathname: '/', query: { date: dateString }}}><button>&lt;&lt; Back to Meal Planner</button></Link>
                 { <h1>{`Meal Plan for ${months[dateString.split('-')[1] - 1]} ${dateString.split('-')[2]}, ${dateString.split('-')[0]}`}</h1> }
                 <div>
                     {errors.map(error => <p>{error.message}</p>)}
