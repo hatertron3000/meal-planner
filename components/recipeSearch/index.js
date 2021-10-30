@@ -74,7 +74,7 @@ export default function RecipeSearch( {addToPlan, meals} ) {
             <div className={styles.filtersContainer}>
                 <div>
                     <p>Choose a cuisine</p>
-                    {cuisineTypes.map(cuisineTypeOption => <p>
+                    {cuisineTypes.map((cuisineTypeOption, i) => <p key={i}>
                         <input 
                             type="radio"
                             name="cuisineType"
@@ -91,7 +91,7 @@ export default function RecipeSearch( {addToPlan, meals} ) {
                 </div>
                 <div>
                     <p>Choose a meal</p>
-                    {mealTypes.map(mealTypeOption => <p>
+                    {mealTypes.map((mealTypeOption, i) => <p key={i}>
                         <input 
                             type="radio"
                             name="mealType"
@@ -107,7 +107,7 @@ export default function RecipeSearch( {addToPlan, meals} ) {
                 </div>
                 <div>
                     <p>Choose a dish</p>
-                    {dishTypes.map(dishTypeOption => <p>
+                    {dishTypes.map((dishTypeOption, i) => <p key={i}>
                         <input 
                             type="radio"
                             name="dishType"
@@ -123,7 +123,7 @@ export default function RecipeSearch( {addToPlan, meals} ) {
                 </div>
                 <div>
                     <p>Choose a diet</p>
-                    {diets.map(dietOption => <p>
+                    {diets.map((dietOption, i) => <p key={i}>
                         <input 
                             type="radio"
                             name="diet"
@@ -138,7 +138,7 @@ export default function RecipeSearch( {addToPlan, meals} ) {
                 </div>
                 <div>
                     <p>Choose a health filter</p>
-                    {healths.map(healthOption => <p>
+                    {healths.map((healthOption, i) => <p key={i}>
                         <input
                             type="radio"
                             name="health"
@@ -159,7 +159,7 @@ export default function RecipeSearch( {addToPlan, meals} ) {
                 ? <button onClick={() => onGetNextPage(searchResults.links.next)}>Load more results</button>
                 : null }
             <div className={styles.cardsContainer}>
-                { searchResults.recipes.map(recipe =>  <RecipeCard recipe={recipe} addToPlan={addToPlan}/>)}
+                { searchResults.recipes.map((recipe, i) =>  <RecipeCard recipe={recipe} addToPlan={addToPlan} key={i}/>)}
             </div>
         </div>
     </div>

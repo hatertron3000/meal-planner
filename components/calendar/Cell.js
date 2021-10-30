@@ -25,7 +25,7 @@ export default function Cell({date, month, year, meals}) {
                   ? <div>
                       <span className={styles.tabLabel}>Meals</span>
                       <ul className={styles.mealList}>
-                          {meals.map(meal => <li>
+                          {meals.map((meal, i) => <li key={i}>
                               <a href={meal.recipe.url} target="_blank">{meal.recipe.label}</a>
                           </li>)}
                       </ul>
