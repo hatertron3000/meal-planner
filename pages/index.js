@@ -77,14 +77,7 @@ export default function Home() {
       </main>
 
       <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
-        </a>
+
       </footer>
 
       <style jsx>{`
@@ -92,7 +85,8 @@ export default function Home() {
 
         main {
           width: 100%;
-          padding: 5rem 0;
+          padding-bottom: 5rem;
+          padding-top: 1rem;
           flex: 1;
           display: flex;
           flex-direction: column;
@@ -100,28 +94,10 @@ export default function Home() {
           align-items: center;
         }
 
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
+        @media(max-width: 1400px) {
+          main {
+            align-items: start;
+          }
         }
 
         .title a {
