@@ -1,0 +1,74 @@
+.cell {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-left: 0.3em;
+  padding-right: 0.3em;
+  padding-bottom: 0.3em;
+}
+
+.cell p {
+  margin-top: 0.2em;
+  margin-bottom: 0.4em;
+}
+
+.addEdit {
+  background-color: #363444;
+  border-color: #040404;
+  border-style: outset;
+  border-radius: 5px;
+  border-width: 4px;
+  padding: 3px;
+  font-size: small;
+}
+
+.addEdit a {
+  color: #cfcfff;
+}
+
+.addEdit:active {
+  border-style: inset;
+  border-color: #cfcfff;
+}
+
+.today {
+  background-color: #565464;
+  color: #eeeeff;
+}
+
+.mealList {
+  background-color: #ffffff;
+  border-color: #040404;
+  border-style: outset;
+  border-radius: 5px;
+  border-width: 2px;
+  padding: 3px;
+  list-style: none;
+  padding-inline-start: unset;
+  padding: 0.3em;
+  margin-top: 0;
+}
+
+.mealList li {
+  margin-bottom: 0.6em;
+}
+
+.td {
+  vertical-align: top;
+}
+
+.tabLabel {
+  font-size: small;
+  color: #040404;
+  background: #ffffff;
+  padding: 0.2rem;
+  padding-bottom: 0;
+  margin-left: 10px;
+  border-color: #040404;
+  border-style: outset;
+  border-radius: 5px;
+  border-width: 2px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 0;
+}
