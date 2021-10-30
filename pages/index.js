@@ -68,8 +68,11 @@ export default function Home() {
           <button onClick={handleNextMonthClick}>&gt;&gt;</button>
         </div>
       </div>
-      <Calendar  month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
-
+      <div style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div></div>
+        <Calendar  month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
+        <div></div>
+      </div>
 
       </main>
 
