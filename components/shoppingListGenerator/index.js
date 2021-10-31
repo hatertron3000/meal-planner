@@ -1,6 +1,14 @@
 import Image from 'next/image'
-
+import { useState } from 'react'
 export default function ShoppingListGenerator({meals}) {
+    const [selectedItems, setSelectedItems] = useState([])
+    const onSelectItem = (item) => {
+        setSelectedItems(selectedItems.concat(item))
+    }
+
+    const onDeselectItem = (item) => {
+        setSelectedItems(selectedItems.filter(i => i.foodId != item.foodId))
+    }
 
     //     /*
     //         // item
@@ -75,38 +83,73 @@ export default function ShoppingListGenerator({meals}) {
     
 
     return (
-        <div>
+        <div className="container">
             <h2>Shopping List Generator</h2>
             <div>
                 <h3>All items</h3>
                 <p>Select items to add to the list</p>
-                {allItems.map((item, i) => {
-                    console.log(`${item.image.slice(0, -4)}-s${item.image.slice(-4)}`)
-                    return <div key={i} style={{display: 'flex'}}>
-                        <div>
-                            <input type="checkbox" value={item.foodId} /> 
-                        </div>
-                        <div className="thumbnail" >
-                            <Image src={`${item.image.slice(0, -4)}-s${item.image.slice(-4)}`} width="100px" height="100px"/>
-                        </div>
-                        <div>
-                            <p>{item.food}</p>
-                            <ul>
-                            {item.amounts.map((amount, i) => (
-                                <li key={i}>{amount.quantity} {amount.measure}</li>
-                            ))}
-                            </ul>
-                        </div>
-                    </div>
-}               )}
+                <div className="itemsContainer">
+                    {allItems.map((item, i) => {
+                        console.log(`${item.image.slice(0, -4)}-s${item.image.slice(-4)}`)
+                        return <div key={i} style={{display: 'flex'}}>
+                            <div>
+                                <input type="checkbox" value={item.foodId} onInput={(e) => e.target.checked
+                                ? onSelectItem(item)
+                                : onDeselectItem(item)} /> 
+                            </div>
+                            <div className="thumbnail" >
+                                <Image src={`${item.image.slice(0, -4)}-s${item.image.slice(-4)}`} width="100px" height="100px"/>
+                            </div>
+                            <div>
+                                <p className="title">{item.food}</p>
+                                <ul className="ingredientsList">
+                                {item.amounts.map((amount, i) => (
+                                    <li key={i}>{amount.quantity} {amount.measure}</li>
+                                ))}
+                                </ul>
+                            </div>
+                        </div>         
+                        })}
+                </div>
             </div>
+            <div><h3>Shopping List:</h3>
+            <ul>
+            {selectedItems.map((item, i) => (
+                <li key={i}>
+                    {item.food}: {item.amounts.map((amount, index) => `${ index != 0 ? ` and` : ``} ${ amount.quantity } ${ amount.measure }`)}
+                </li>
+            ))}
+            </ul>
+            </div>
+            
             <style jsx>
                 {`
+                    .ingredientsList {
+                        width: 8rem;
+                        word-break: break-all;
+                    }
+
+                    .title {
+                        width: 9rem;
+                        word-break: break-all;
+                    }
+
+                    .container {
+                        margin-left: 3em;
+                        margin-right: 3em;
+                    }
+                        
                     .thumbnail {
                         border-radius: 33%;
                         overflow: hidden;
                         margin-right: 1em;
                         margin-left: 1em;
+                    }
+
+                    .itemsContainer {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: space-around;
                     }
                 `}
             </style>
