@@ -50,7 +50,6 @@ export default function ShoppingListGenerator({meals}) {
             // compare the current item's amounts[0].measure to the measures of all amounts in the previous item's amounts
                 return items.map(i => {
                     if(i.foodId === item.foodId) {
-                        console.log('found a dupe', item)
                         let newAmounts = []
                         if(i.amounts.map(({measure}) => measure).includes(item.amounts[0].measure)) {
                             // combine the amounts
@@ -70,7 +69,6 @@ export default function ShoppingListGenerator({meals}) {
                             i.amounts = newAmounts
                         }
                     }
-                    console.log(i)
                     return i
                 })
           } else {
@@ -90,11 +88,18 @@ export default function ShoppingListGenerator({meals}) {
                 <p>Select items to add to the list</p>
                 <div className="itemsContainer">
                     {allItems.map((item, i) => {
-                        return <div key={i} style={{display: 'flex'}}>
+                        const isSelected = selectedItems.map(selectedItem => selectedItem.foodId).includes(item.foodId)
+                        console.log(`${item.food} is selected: `, selectedItems.map(selectedItem => selectedItem.foodId).includes(item.foodId))
+                        return <div className="item"
+                                key={i}
+                                onClick={() => isSelected ? onDeselectItem(item) : onSelectItem(item)}
+                               >
                             <div>
-                                <input type="checkbox" value={item.foodId} onInput={(e) => e.target.checked
-                                ? onSelectItem(item)
-                                : onDeselectItem(item)} /> 
+                                <input type="checkbox"
+                                    className="itemCheckbox"
+                                    value={item.foodId} 
+                                    checked={isSelected}
+                                /> 
                             </div>
                             <div className="thumbnail" >
                                 {   item.image
@@ -114,20 +119,61 @@ export default function ShoppingListGenerator({meals}) {
                         })}
                 </div>
             </div>
-            <div><h3>Shopping List:</h3>
-            <ul>
-            {selectedItems.map((item, i) => (
-                <li key={i}>
-                    {item.food}: {item.amounts.map((amount, index) => `${ index != 0 ? ` and` : ``} ${ amount.quantity } ${ amount.measure === "<unit>" ? "" : amount.measure }`)}
-                </li>
-            ))}
-            </ul>
+            <div className="shoppingList">
+                <h3>Shopping List:</h3>
+                <table>
+
+                            <tr>
+                                <th>Food</th><th>Amounts</th>
+                            </tr>
+                            {selectedItems.map((item, i) => (
+                                <tr key={i}>
+                                    <td>{item.food}</td>
+                                    <td>{item.amounts.map((amount, index) => `${ index != 0 ? ` and` : ``} ${ amount.quantity } ${ amount.measure === "<unit>" ? "" : amount.measure }`)}</td>
+                                </tr>
+                            ))}
+
+                </table>
+                <ul>
+                {selectedItems.map((item, i) => (
+                    <li key={i}>
+                        {item.food}: {item.amounts.map((amount, index) => `${ index != 0 ? ` and` : ``} ${ amount.quantity } ${ amount.measure === "<unit>" ? "" : amount.measure }`)}
+                    </li>
+                ))}
+                </ul>
             </div>
             
             <style jsx>
                 {`
+                    .item {
+                        display: flex;
+                        padding-top: 1rem;
+                        padding-left: 1rem;
+                        border-radius: 17%;
+                        border-style: solid;
+                        border-color: #5c7aff;
+                        background-color: #73FBD3;
+                        margin-bottom: 1rem;
+                        margin-right: .66rem;
+                    }
+
+                    .itemCheckbox {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                    }
+
+                    .itemCheckbox:checked {
+                        box-shadow: 0 0 .4em #5c7aff;
+                    }
+
+                    .shoppingList > table td {
+                        border-style: solid;
+                        border-width: 1px 0px;
+                        margin: 0;
+                        padding: .2rem .7rem;
+                    }
+                    
                     .ingredientsList {
-                        width: 8rem;
                         word-break: break-word;
                     }
 
