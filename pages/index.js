@@ -1,23 +1,23 @@
 import Head from 'next/head'
 import Calendar from '../components/calendar'
+import ShoppingListGenerator from '../components/shoppingListGenerator'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 
 export default function Home() {
   const { query } = useRouter()
-  let d
   const { date } = query
-  console.log(date)
-  d = new Date(date)
+
+  let d = new Date(date)
   if (isNaN(d.getFullYear()))
     d = new Date()
-  console.log(d)
+  
   const [calendarState, setCalendarState] = useState({
     month: d.getMonth(),
     year: d.getFullYear(),
   })
-
-  console.log('calendarState', calendarState)
+  const [activeTab, setActiveTab] = useState('calendar') // 'calendar', 'shopping-list-generator', 'shopping-list'
+  const [calendarMeals, setCalendarMeals] = useState([])
 
   const handleNextMonthClick = () => {
     if(calendarState.month != 11)
@@ -47,6 +47,11 @@ export default function Home() {
     }
   }
 
+  const handleCreateListClick = async (meals) => {
+    setCalendarMeals(meals)
+    setActiveTab('shopping-list-generator')
+  }
+
   return (
     <div className="container">
       <Head>
@@ -61,25 +66,27 @@ export default function Home() {
         <h1 className="title">
           Meal Planner
         </h1>
-        
-        <div style={{display: 'flex', justifyContent: 'space-between'}}>
-          <div></div>
-          <div style={{display: 'flex'}}>
-            <div>
-              <button onClick={handlePrevMonthClick}>&lt;&lt;</button>
-            </div>
-            <div>
-              <button onClick={handleNextMonthClick}>&gt;&gt;</button>
-            </div>
-          </div>
-          <div></div>
+        <div className="navigation">
+          <span onClick={() => setActiveTab('calendar')}>Calendar</span>
+          <span onClick={() => setActiveTab('shopping-lists')}>Shopping Lists</span>
         </div>
       </header>
       
       <main>
+       
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
           <div></div>
-          <Calendar  month={calendarState.month} year={calendarState.year} handleNextMonthClick={handleNextMonthClick} handlePrevMonthClick={handlePrevMonthClick} />
+          { activeTab === 'calendar'
+          && <Calendar 
+          month={calendarState.month}
+          year={calendarState.year}
+          handleNextMonthClick={handleNextMonthClick}
+          handlePrevMonthClick={handlePrevMonthClick}
+          handleCreateListClick={handleCreateListClick}
+          />}
+
+          { activeTab === 'shopping-list-generator'
+          && <ShoppingListGenerator meals={calendarMeals}/>}
           <div></div>
         </div>
 
@@ -101,6 +108,24 @@ export default function Home() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+        }
+
+        .navigation {
+          display: flex;
+          justify-content: space-evenly;
+          margin-top: 1em;
+        }
+
+        .navigation span {
+          border-width: 2px;
+          border-radius: 5px;
+          border-style: outset;
+          padding: .2em;
+          margin: .1em;
+        }
+
+        .navigation span:active {
+          border-style: inset;
         }
 
         @media(max-width: 1400px) {

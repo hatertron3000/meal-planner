@@ -1,7 +1,7 @@
 import styles from './Cell.module.css'
 import Link from 'next/link'
 
-export default function Cell({date, month, year, meals}) {
+export default function Cell({date, month, year, meals, onSelectMeals, onDeselectMeals}) {
     const now = new Date()
     const isToday = now.getDate() === date && now.getMonth() === month && now.getFullYear() === year
         && now.getMonth() === month
@@ -15,12 +15,21 @@ export default function Cell({date, month, year, meals}) {
         { 
             date 
                 ? <div className={classList}>
-                <p>{date}
-                    {
-                        isToday
-                        && <span> (Today)</span>
-                    }
-                </p>
+                    <div style={{display: 'flex'}}>
+                        <input type="checkbox" onInput={(e) => {
+                                if (e.target.checked)
+                                    onSelectMeals(meals)
+                                else
+                                    onDeselectMeals(meals)
+                            }
+                        }/>
+                        <p>{date}
+                            {
+                                isToday
+                                && <span> (Today)</span>
+                            }
+                        </p>
+                    </div>
                 { meals.length 
                   ? <div>
                       <span className={styles.tabLabel}>Meals</span>
