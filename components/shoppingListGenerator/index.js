@@ -104,7 +104,7 @@ export default function ShoppingListGenerator({meals}) {
                                 <p className="title">{item.food}</p>
                                 <ul className="ingredientsList">
                                 {item.amounts.map((amount, i) => (
-                                    <li key={i}>{amount.quantity} {amount.measure}</li>
+                                    <li key={i}>{amount.quantity} { amount.measure === "<unit>" ? "" : amount.measure }</li>
                                 ))}
                                 </ul>
                             </div>
@@ -116,7 +116,7 @@ export default function ShoppingListGenerator({meals}) {
             <ul>
             {selectedItems.map((item, i) => (
                 <li key={i}>
-                    {item.food}: {item.amounts.map((amount, index) => `${ index != 0 ? ` and` : ``} ${ amount.quantity } ${ amount.measure }`)}
+                    {item.food}: {item.amounts.map((amount, index) => `${ index != 0 ? ` and` : ``} ${ amount.quantity } ${ amount.measure === "<unit>" ? "" : amount.measure }`)}
                 </li>
             ))}
             </ul>
@@ -126,7 +126,7 @@ export default function ShoppingListGenerator({meals}) {
                 {`
                     .ingredientsList {
                         width: 8rem;
-                        word-break: break-all;
+                        word-break: break-word;
                     }
 
                     .title {
