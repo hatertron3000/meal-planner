@@ -2,10 +2,12 @@ import styles from './Calendar.module.css'
 import Cell from './Cell'
 import months from '../../lib/months'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useSWR from 'swr'
 
-const Row = ({ dates, month, year, meals = [] }) => {
+const Row = ({ dates, month, year, meals = [], onSelectMeals, onDeselectMeals }) => {
+
+    
     return <tr>
         {dates.map((date, i) => {
            const mealsForThisDate = meals.filter(meal => {
@@ -14,20 +16,53 @@ const Row = ({ dates, month, year, meals = [] }) => {
                && d.getUTCMonth() === month
                && d.getUTCFullYear() === year
            })
-           return <Cell month={month} year={year} date={date} key={i} meals={mealsForThisDate}/>
+           return <Cell
+                month={month} 
+                year={year} 
+                date={date} 
+                key={i} 
+                meals={mealsForThisDate} 
+                onSelectMeals={onSelectMeals} 
+                onDeselectMeals={onDeselectMeals} 
+            />
         })}
     </tr>
 }
 
 const fetcher = (url) => fetch(url).then(res => res.json())
 
-const CalendarComponent = ({ month, year, rows, meals }) => (
-    <div className={styles.calendarContainer}>
+const CalendarComponent = ({ month, year, rows, meals, handlePrevMonthClick, handleNextMonthClick, handleCreateListClick }) => {
+    const [selectedMeals, setSelectedMeals] = useState([]),
+
+    onSelectMeals = (meals) => {
+        setSelectedMeals(selectedMeals.concat(meals))
+    },
+
+    onDeselectMeals = (meals) => {
+        const mealIds = meals.map(({_id}) => _id)
+        const newMeals = selectedMeals.filter(selectedMeal => mealIds.indexOf(selectedMeal._id) < 0)
+        setSelectedMeals(newMeals)
+    }
+
+    return <div className={styles.calendarContainer}>
+         <div style={{display: 'flex', justifyContent: 'space-between'}}>
+          <div></div>
+          <div style={{display: 'flex'}}>
+            <div>
+              <button onClick={handlePrevMonthClick}>&lt;&lt;</button>
+            </div>
+            <div>
+              <button onClick={handleNextMonthClick}>&gt;&gt;</button>
+            </div>
+          </div>
+          <div></div>
+        </div>
         <div style={{display: 'flex', justifyContent: 'space-between'}}>
             <div></div>
             <h3>{`${months[month]}, ${year}`}</h3>
             <div></div>
         </div>
+        { }
         <table>
             <thead>
                 <tr>
@@ -41,16 +76,28 @@ const CalendarComponent = ({ month, year, rows, meals }) => (
                 </tr>
             </thead>
             <tbody>
-               { rows.map((row, i) => <Row dates={row} meals={meals} month={month} year={year} key={i} />)}
+               { rows.map((row, i) => <Row
+                    dates={row} 
+                    meals={meals} 
+                    month={month} 
+                    year={year} 
+                    key={i} 
+                    onSelectMeals={onSelectMeals} 
+                    onDeselectMeals={onDeselectMeals} 
+                />)}
             </tbody>
         </table>
+        {selectedMeals.length > 0
+        && <div>
+            <p>Selected Meals Count: {selectedMeals.length}</p>
+            <p><button onClick={() => handleCreateListClick(selectedMeals)}>Create Shopping List</button></p>
+        </div>}
     </div>
-)
+}
 
-export default function Calendar({ month, year }) {
+export default function Calendar({ month, year, handleNextMonthClick, handlePrevMonthClick, handleCreateListClick }) {
     const url = `/api/meals?min_date=${encodeURIComponent(new Date(year, month, 1, 0))}&max_date=${encodeURIComponent(new Date(year, month + 1, 1, 0))}`
     const {data, error} = useSWR(url, fetcher)
-    console.log(data, error)
 
     if(error) console.error(error)
     
@@ -97,8 +144,16 @@ export default function Calendar({ month, year }) {
 
     if(error) 
         return <div>Error loading, try again.</div>
-    if(!data)
-        return <CalendarComponent rows={rows} month={month} year={year} meals={[]} />
 
-    return <CalendarComponent rows={rows} month={month} year={year} meals={data} />
+    return <CalendarComponent
+        rows={rows}
+        month={month}
+        year={year}
+        meals={!data
+            ? []
+            : data}
+        handleNextMonthClick={handleNextMonthClick}
+        handlePrevMonthClick={handlePrevMonthClick}
+        handleCreateListClick={handleCreateListClick}
+    />
 }
