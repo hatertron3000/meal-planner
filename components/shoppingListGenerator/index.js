@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import ImageWithFallback from '../imageWithFallback'
 import { useState } from 'react'
 export default function ShoppingListGenerator({meals}) {
     const [selectedItems, setSelectedItems] = useState([])
@@ -90,7 +90,6 @@ export default function ShoppingListGenerator({meals}) {
                 <p>Select items to add to the list</p>
                 <div className="itemsContainer">
                     {allItems.map((item, i) => {
-                        console.log(`${item.image.slice(0, -4)}-s${item.image.slice(-4)}`)
                         return <div key={i} style={{display: 'flex'}}>
                             <div>
                                 <input type="checkbox" value={item.foodId} onInput={(e) => e.target.checked
@@ -98,7 +97,10 @@ export default function ShoppingListGenerator({meals}) {
                                 : onDeselectItem(item)} /> 
                             </div>
                             <div className="thumbnail" >
-                                <Image src={`${item.image.slice(0, -4)}-s${item.image.slice(-4)}`} width="100px" height="100px"/>
+                                {   item.image
+                                ? <ImageWithFallback src={`${item.image.slice(0, -4)}-s${item.image.slice(-4)}`}  fallbackSrc='/images/ingredient.png' width="100px" height="100px"/>
+                                : <ImageWithFallback src='/images/ingredient.png' width="100px" height="100px" />
+                                }
                             </div>
                             <div>
                                 <p className="title">{item.food}</p>
@@ -140,7 +142,7 @@ export default function ShoppingListGenerator({meals}) {
                     }
                         
                     .thumbnail {
-                        border-radius: 33%;
+                        border-radius: 17%;
                         overflow: hidden;
                         margin-right: 1em;
                         margin-left: 1em;
