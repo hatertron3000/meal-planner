@@ -5,8 +5,8 @@ This is an app to help my family plan meals and discover new recipes. It uses Ne
 ## Prerequisites
 
 - Node 12+
-- A MongoDB with a collection named "meal-plans"
-- An Edamam developer app key and app id
+- MongoDB
+- Edamam developer app key and app id
 
 ### MongoDB
 

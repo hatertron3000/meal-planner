@@ -1,4 +1,5 @@
-import clientPromise, { collections, ObjectID } from "../../lib/mongodb"
+import clientPromise, { ObjectID } from "../../lib/mongodb"
+import collections from "../../lib/collections"
 
 /* 
     MongoDB does not support key names with dots.
@@ -26,6 +27,11 @@ export default async function MealsApi(req, res) {
     const isConnected = await client.isConnected()
     const db = await client.db()
     const collection = db.collection(collections.mealPlans)
+
+    if (!isConnected) {
+        res.status(500).json({ error: 'DB connection error'})
+        return
+    }
 
     if (req.method === "GET") {
         const { min_date, max_date } = req.query
@@ -91,10 +97,7 @@ export default async function MealsApi(req, res) {
             res.status(400).json({ error: "recipe.label is a required field"})
         else if (!req.body.date) {
             res.status(400).json({ error: "date is required"})
-        }
-        else if (!isConnected)
-            res.status(500).json({ error: "application error" })
-        else {
+        } else {
             try {
             /* TODO: Create Meal and Recipe schemas */
             const recipe = encodeRecipe(req.body.recipe)

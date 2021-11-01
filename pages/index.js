@@ -1,8 +1,9 @@
 import Head from 'next/head'
 import Calendar from '../components/calendar'
-import ShoppingListGenerator from '../components/shoppingListGenerator'
+import ShoppingListEditor from '../components/shoppingListEditor'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import ShoppingLists from '../components/shoppingLists'
 
 export default function Home() {
   const { query } = useRouter()
@@ -16,8 +17,9 @@ export default function Home() {
     month: d.getMonth(),
     year: d.getFullYear(),
   })
-  const [activeTab, setActiveTab] = useState('calendar') // 'calendar', 'shopping-list-generator', 'shopping-list'
+  const [activeTab, setActiveTab] = useState('calendar') // 'calendar', 'shopping-list-editor', 'shopping-lists'
   const [calendarMeals, setCalendarMeals] = useState([])
+  const [list, setList] = useState()
 
   const handleNextMonthClick = () => {
     if(calendarState.month != 11)
@@ -48,8 +50,9 @@ export default function Home() {
   }
 
   const handleCreateListClick = async (meals) => {
+    setList(undefined)
     setCalendarMeals(meals)
-    setActiveTab('shopping-list-generator')
+    setActiveTab('shopping-list-editor')
   }
 
   return (
@@ -67,8 +70,8 @@ export default function Home() {
           Meal Planner
         </h1>
         <div className="navigation">
-          <span onClick={() => setActiveTab('calendar')}>Calendar</span>
-          <span onClick={() => setActiveTab('shopping-lists')}>Shopping Lists</span>
+          <button onClick={() => setActiveTab('calendar')}>Calendar</button>
+          <button onClick={() => setActiveTab('shopping-lists')}>Shopping Lists</button>
         </div>
       </header>
       
@@ -85,8 +88,15 @@ export default function Home() {
           handleCreateListClick={handleCreateListClick}
           />}
 
-          { activeTab === 'shopping-list-generator'
-          && <ShoppingListGenerator meals={calendarMeals}/>}
+          { activeTab === 'shopping-list-editor'
+          && <ShoppingListEditor meals={list?list.meals:calendarMeals} onSave={() => setActiveTab('shopping-lists')} list={list?list:undefined}/>}
+
+          { activeTab === 'shopping-lists'
+          && <ShoppingLists setActiveTab={setActiveTab} onEditList={list => { 
+              setList(list)
+              setActiveTab('shopping-list-editor')
+            }
+          } />}
           <div></div>
         </div>
 
@@ -116,16 +126,24 @@ export default function Home() {
           margin-top: 1em;
         }
 
-        .navigation span {
+        .navigation button {
           border-width: 2px;
           border-radius: 5px;
+          border-color: #5c7aff;
           border-style: outset;
-          padding: .2em;
+          padding: .2em .4em;
           margin: .1em;
+          background-color: #5c7aff;
+          color: #ffffff;
+          font-size: 1.5rem;
+          cursor: pointer;
         }
 
-        .navigation span:active {
+        .navigation button:active {
+          background-color: #59D2FE;
+          border-color: #4A8FE7;
           border-style: inset;
+          box-shadow: 0 0 .8em #59d2fe;
         }
 
         @media(max-width: 1400px) {
