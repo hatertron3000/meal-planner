@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import RecipeSearch from '../../components/recipeSearch'
-import months from '../../lib/months'
-import clientPromise, { collections } from '../../lib/mongodb'
+import clientPromise from '../../lib/mongodb'
+import collections from '../../lib/collections'
 import Link from 'next/link'
 
 export default function AddMeal({ isConnected, initialMeals }) {

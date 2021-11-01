@@ -13,22 +13,31 @@
 }
 
 .addEdit {
-  background-color: #363444;
-  border-color: #040404;
+  background-color: #5c7aff;
+  border-color: #5c7aff;
   border-style: outset;
   border-radius: 5px;
   border-width: 4px;
-  padding: 3px;
+  padding: 0.3em 3px;
   font-size: small;
+  display: flex;
+  justify-content: space-between;
 }
 
 .addEdit a {
-  color: #cfcfff;
+  color: #ffffff;
+  font-size: 1.13rem;
+  text-decoration: none;
+}
+
+.addEdit:hover {
+  cursor: pointer;
 }
 
 .addEdit:active {
   border-style: inset;
   border-color: #cfcfff;
+  box-shadow: 0 0 0.6em #4a8fe7;
 }
 
 .today {

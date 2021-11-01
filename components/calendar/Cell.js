@@ -41,7 +41,9 @@ export default function Cell({date, month, year, meals, onSelectMeals, onDeselec
                       </div>
                   : null }
                   <div className={styles.addEdit}>
-                <Link  href={`/add-meal/${encodeURIComponent(new Date(year, month, date))}`}>Add/Edit Meals</Link>
+                      <div></div>
+                      <div><Link  href={`/add-meal/${encodeURIComponent(new Date(year, month, date))}`}>Add/Edit Meals</Link></div>
+                      <div></div>
                 </div>
         </div>
             : <div className={styles.cell}></div>}
